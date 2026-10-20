@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="LibroReclamaciones.Pages.HistorialPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Padding="24,8,24,16" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="4">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Historial" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="Cada hoja queda guardada en este equipo. Puede volver a descargar el PDF de cualquiera de ellas."
+                TextWrapping="Wrap" />
+            <TextBlock x:Name="Resumen" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                x:Name="Busqueda"
+                Header="Buscar"
+                PlaceholderText="Nombre, documento o número de hoja"
+                TextChanged="Busqueda_Changed" />
+            <ComboBox
+                x:Name="EstadoFiltro"
+                Grid.Column="1"
+                Header="Estado"
+                HorizontalAlignment="Stretch"
+                SelectedIndex="0"
+                SelectionChanged="Filtro_Changed">
+                <x:String>Todos</x:String>
+                <x:String>Pendientes</x:String>
+                <x:String>Propuestas</x:String>
+                <x:String>Respondidos</x:String>
+                <x:String>Vencidos</x:String>
+            </ComboBox>
+            <ComboBox
+                x:Name="AnioFiltro"
+                Grid.Column="2"
+                Header="Año"
+                HorizontalAlignment="Stretch"
+                SelectionChanged="Filtro_Changed" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <TextBlock
+                x:Name="Vacio"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="Aún no hay reclamos guardados." />
+            <ListView x:Name="Lista" SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0,0,0,8" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Tarjeta}" Margin="0">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Spacing="2">
+                                    <TextBlock FontWeight="SemiBold" Text="{Binding NumeroTexto}" />
+                                    <TextBlock Text="{Binding Consumidor}" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding Detalle}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Meta}" />
+                                    <TextBlock FontWeight="SemiBold" Text="{Binding Plazo}" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="6">
+                                    <Button Content="Editar" Click="Editar_Click" />
+                                    <Button Content="Descargar PDF" Click="Descargar_Click" Style="{StaticResource AccentButtonStyle}" />
+                                    <Button Content="Eliminar" Click="Eliminar_Click" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

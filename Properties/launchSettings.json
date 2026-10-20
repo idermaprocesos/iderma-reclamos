@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LibroReclamaciones (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LibroReclamaciones (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

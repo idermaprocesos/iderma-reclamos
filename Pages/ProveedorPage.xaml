@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="LibroReclamaciones.Pages.ProveedorPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Padding="24,8,24,16">
+        <StackPanel MaxWidth="760" Spacing="12">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Datos del proveedor" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="Estos datos se imprimen en la hoja de reclamación y en la carta de respuesta. El reglamento exige razón social o nombre, RUC y domicilio del establecimiento."
+                TextWrapping="Wrap" />
+            <InfoBar x:Name="Aviso" IsClosable="True" IsOpen="False" />
+
+            <Border Style="{StaticResource Tarjeta}">
+                <StackPanel Spacing="12">
+                    <TextBox x:Name="RazonBox" Header="Nombre o razón social" />
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="RucBox" Header="RUC" MaxLength="11" />
+                        <TextBox x:Name="CodigoBox" Grid.Column="1" Header="Código de identificación del establecimiento" />
+                    </Grid>
+                    <TextBox x:Name="DomicilioBox" Header="Domicilio del establecimiento" />
+                    <TextBox x:Name="CiudadBox" Header="Ciudad que aparece en la carta" PlaceholderText="Por ejemplo, Lima" />
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="RepresentanteBox" Header="Nombre de quien firma" />
+                        <TextBox x:Name="CargoBox" Grid.Column="1" Header="Cargo" />
+                    </Grid>
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="CorreoBox" Header="Correo del proveedor" />
+                        <TextBox x:Name="TelefonoBox" Grid.Column="1" Header="Teléfono del proveedor" />
+                    </Grid>
+                    <NumberBox
+                        x:Name="CorrelativoBox"
+                        Header="Siguiente número de hoja"
+                        Minimum="1"
+                        Maximum="999999999"
+                        SpinButtonPlacementMode="Compact" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        FontSize="12"
+                        Text="El número sugerido al crear una hoja nueva. Si el libro físico ya tiene hojas usadas, coloque aquí el número que sigue."
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Guardar" Click="Guardar_Click" Style="{StaticResource AccentButtonStyle}" />
+                <Button Content="Abrir carpeta de datos" Click="AbrirCarpeta_Click" />
+            </StackPanel>
+            <TextBlock
+                x:Name="RutaDatos"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                FontSize="12"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

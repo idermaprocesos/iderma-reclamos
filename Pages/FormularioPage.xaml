@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="LibroReclamaciones.Pages.FormularioPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LibroReclamaciones.Pages"
+    NavigationCacheMode="Enabled">
+
+    <Grid Padding="24,8,24,12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="8">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Responder reclamo" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="Anexo I del libro de reclamaciones (D.S. N.º 011-2011-PCM, modificado por D.S. N.º 101-2022-PCM). El plazo máximo de respuesta es de 15 días hábiles."
+                TextWrapping="Wrap" />
+            <InfoBar
+                x:Name="AvisoProveedor"
+                IsClosable="False"
+                IsOpen="False"
+                Message="Complete la razón social, el RUC y el domicilio en Proveedor antes de exportar el PDF."
+                Severity="Warning"
+                Title="Faltan datos del proveedor" />
+            <InfoBar x:Name="PlazoInfo" IsClosable="False" IsOpen="True" Severity="Informational" Title="Plazo de respuesta" />
+            <InfoBar x:Name="Aviso" IsClosable="True" IsOpen="False" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" Margin="0,12,0,0" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel MaxWidth="980" HorizontalAlignment="Left">
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Style="{StaticResource TituloSeccion}" Text="Hoja de reclamación" />
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <NumberBox
+                                x:Name="NumeroBox"
+                                Header="Número de hoja"
+                                Minimum="1"
+                                Maximum="999999999"
+                                SpinButtonPlacementMode="Compact"
+                                ValueChanged="Derivados_Changed" />
+                            <NumberBox
+                                x:Name="AnioBox"
+                                Grid.Column="1"
+                                Header="Año"
+                                Minimum="2000"
+                                Maximum="2100"
+                                SpinButtonPlacementMode="Compact"
+                                ValueChanged="Derivados_Changed" />
+                            <DatePicker
+                                x:Name="FechaReclamoPicker"
+                                Grid.Column="2"
+                                Header="Fecha del reclamo o queja"
+                                DateChanged="Fecha_Changed" />
+                        </Grid>
+                        <TextBlock x:Name="NumeroVista" FontWeight="SemiBold" />
+                        <TextBlock
+                            x:Name="MembreteVista"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap" />
+                        <Button Content="Usar datos actuales del proveedor" Click="ActualizarMembrete_Click" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Style="{StaticResource TituloSeccion}" Text="1. Consumidor reclamante" />
+                        <TextBox x:Name="NombreBox" Header="Nombre" />
+                        <TextBox x:Name="DomicilioBox" Header="Domicilio" />
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.4*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="TipoDocCombo" Header="Documento" HorizontalAlignment="Stretch" SelectedIndex="0">
+                                <x:String>DNI</x:String>
+                                <x:String>CE</x:String>
+                                <x:String>Pasaporte</x:String>
+                            </ComboBox>
+                            <TextBox x:Name="DocumentoBox" Grid.Column="1" Header="Número" />
+                            <TextBox x:Name="TelefonoBox" Grid.Column="2" Header="Teléfono" />
+                            <TextBox x:Name="EmailBox" Grid.Column="3" Header="Correo electrónico" />
+                        </Grid>
+                        <ToggleSwitch
+                            x:Name="MenorSwitch"
+                            Header="El consumidor es menor de edad"
+                            OffContent="No"
+                            OnContent="Sí"
+                            Toggled="MenorSwitch_Toggled" />
+                        <StackPanel x:Name="PadrePanel" Spacing="12" Visibility="Collapsed">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.4*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.2*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="PadreNombreBox" Header="Padre, madre o representante" />
+                                <TextBox x:Name="PadreDocumentoBox" Grid.Column="1" Header="Documento" />
+                                <TextBox x:Name="PadreTelefonoBox" Grid.Column="2" Header="Teléfono" />
+                                <TextBox x:Name="PadreEmailBox" Grid.Column="3" Header="Correo" />
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Style="{StaticResource TituloSeccion}" Text="2. Bien contratado" />
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <RadioButton x:Name="TipoProducto" Content="Producto" GroupName="Bien" IsChecked="True" />
+                            <RadioButton x:Name="TipoServicio" Content="Servicio" GroupName="Bien" />
+                        </StackPanel>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="DescripcionBienBox" Header="Descripción del producto o servicio" />
+                            <NumberBox
+                                x:Name="MontoBox"
+                                Grid.Column="1"
+                                Header="Monto reclamado (S/)"
+                                Minimum="0"
+                                SmallChange="1"
+                                LargeChange="10"
+                                SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Style="{StaticResource TituloSeccion}" Text="3. Detalle y pedido del consumidor" />
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <RadioButton x:Name="TipoReclamo" Content="Reclamo" GroupName="Tipo" IsChecked="True" />
+                            <RadioButton x:Name="TipoQueja" Content="Queja" GroupName="Tipo" />
+                        </StackPanel>
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextWrapping="Wrap"
+                                   Text="Reclamo: disconformidad con los productos o servicios. Queja: disconformidad no relacionada con ellos, o malestar por la atención al público." />
+                        <TextBox x:Name="DetalleBox" Header="Detalle de la reclamación" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="90" />
+                        <TextBox x:Name="PedidoBox" Header="Pedido concreto del consumidor" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" />
+                        <TextBlock Text="Imágenes del consumidor" FontWeight="SemiBold" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            FontSize="12"
+                            TextWrapping="Wrap"
+                            Text="Fotos o capturas que acompañan el reclamo. Se imprimen en el PDF junto al detalle del consumidor." />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Importar imágenes" Click="ImportarImagenes_Click" Tag="consumidor" />
+                            <Button
+                                x:Name="QuitarImagenesConsumidor"
+                                Content="Quitar todas"
+                                Click="QuitarImagenes_Click"
+                                Tag="consumidor"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                        <TextBlock
+                            x:Name="SinImagenesConsumidor"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            FontSize="12"
+                            Text="No hay imágenes adjuntas." />
+                        <ItemsControl x:Name="ListaImagenesConsumidor" Visibility="Collapsed">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid Orientation="Horizontal" ItemWidth="156" ItemHeight="176" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:MiniaturaImagen">
+                                    <StackPanel Width="148" Spacing="4">
+                                        <Border
+                                            Height="112"
+                                            CornerRadius="4"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                            <Image Source="{x:Bind Vista}" Stretch="Uniform" />
+                                        </Border>
+                                        <Button
+                                            Content="Quitar"
+                                            HorizontalAlignment="Stretch"
+                                            Click="QuitarImagen_Click"
+                                            Tag="{x:Bind Ruta}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Style="{StaticResource TituloSeccion}" Text="4. Respuesta del proveedor" />
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="TipoAtencionCombo" Header="Tipo de comunicación" HorizontalAlignment="Stretch" SelectionChanged="TipoAtencion_Changed">
+                                <x:String>Respuesta definitiva</x:String>
+                                <x:String>Propuesta de solución</x:String>
+                                <x:String>Acuerdo inmediato</x:String>
+                            </ComboBox>
+                            <ComboBox x:Name="ResultadoCombo" Grid.Column="1" Header="Resultado" HorizontalAlignment="Stretch" SelectionChanged="Resultado_Changed">
+                                <x:String>Se acoge el pedido</x:String>
+                                <x:String>No se acoge el pedido</x:String>
+                                <x:String>Se acoge parcialmente</x:String>
+                                <x:String>Acuerdo con el consumidor</x:String>
+                            </ComboBox>
+                            <ComboBox x:Name="CanalCombo" Grid.Column="2" Header="Canal de respuesta" HorizontalAlignment="Stretch">
+                                <x:String>Correo electrónico</x:String>
+                                <x:String>Carta</x:String>
+                                <x:String>Entrega presencial</x:String>
+                            </ComboBox>
+                        </Grid>
+                        <DatePicker
+                            x:Name="FechaRespuestaPicker"
+                            Header="Fecha de comunicación de la respuesta"
+                            DateChanged="Fecha_Changed" />
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextWrapping="Wrap"
+                                   Text="El plazo se cuenta desde el día hábil siguiente a la presentación y excluye sábados, domingos y feriados nacionales. Una propuesta de solución suspende ese plazo hasta por 5 días hábiles. Confirme feriados regionales o puentes del año." />
+                        <Button Content="Insertar borrador editable" Click="Redactar_Click" />
+                        <TextBox
+                            x:Name="ObservacionesBox"
+                            Header="Observaciones y acciones adoptadas"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            MinHeight="120" />
+                        <TextBox
+                            x:Name="FundamentoBox"
+                            Header="Fundamento de la posición"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            MinHeight="90" />
+                        <TextBlock Text="Imágenes del proveedor" FontWeight="SemiBold" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            FontSize="12"
+                            TextWrapping="Wrap"
+                            Text="Fotos o capturas que acompañan las acciones adoptadas. Se imprimen en el PDF de la respuesta." />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Importar imágenes" Click="ImportarImagenes_Click" Tag="proveedor" />
+                            <Button
+                                x:Name="QuitarImagenesBoton"
+                                Content="Quitar todas"
+                                Click="QuitarImagenes_Click"
+                                Tag="proveedor"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                        <TextBlock
+                            x:Name="SinImagenes"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            FontSize="12"
+                            Text="No hay imágenes adjuntas." />
+                        <ItemsControl x:Name="ListaImagenes" Visibility="Collapsed">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid Orientation="Horizontal" ItemWidth="156" ItemHeight="176" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:MiniaturaImagen">
+                                    <StackPanel Width="148" Spacing="4">
+                                        <Border
+                                            Height="112"
+                                            CornerRadius="4"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                            <Image Source="{x:Bind Vista}" Stretch="Uniform" />
+                                        </Border>
+                                        <Button
+                                            Content="Quitar"
+                                            HorizontalAlignment="Stretch"
+                                            Click="QuitarImagen_Click"
+                                            Tag="{x:Bind Ruta}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Grid.Row="2"
+            Padding="0,12,0,0"
+            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Nuevo" Click="Nuevo_Click" />
+                <Button Content="Guardar borrador" Click="Guardar_Click" />
+                <Button
+                    Content="Guardar y descargar PDF"
+                    Click="Exportar_Click"
+                    Style="{StaticResource AccentButtonStyle}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
